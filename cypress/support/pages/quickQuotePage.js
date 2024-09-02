@@ -21,7 +21,7 @@ class QuickQuotePage {
     cy.visit(URL)
     cy.acceptAllCookies()
   }
-
+  //validates all fields and contents within car reg form
   validateEnterRegForm() {
     QuickQuotePO.formBoxHeader()
       .should('contain', 'See if you could save in seconds.')
@@ -35,7 +35,7 @@ class QuickQuotePage {
     QuickQuotePO.formBoxSubmit()
       .should('be.enabled')
   }
-
+  //types car reg into input field
   regFormInput(reg) {
     QuickQuotePO.formBoxInput()
       .first()
@@ -44,7 +44,7 @@ class QuickQuotePage {
       .invoke('val')
       .should('equal', reg)
   }
-
+  //submits get a quote form
   clickGetAQuote() {
     cy.intercept('GET', '/api/v1/quick-quote/*')
       .as('quickQuote')
@@ -52,9 +52,10 @@ class QuickQuotePage {
       .click()
     cy.wait('@quickQuote')
   }
-
+  //validates mileage form fields and conrent
   validateMileageForm(vehicleInfo, miles) {
     //store vehicle info & miles for later use
+    //retrieved in quickQuoteResultsPage.js for results validation
     Cypress.env('vehicleInfo', vehicleInfo)
     Cypress.env('miles', miles)
 
@@ -72,8 +73,8 @@ class QuickQuotePage {
     QuickQuotePO.mileageFormBoxQuoteMiles()
       .invoke('text')
       .then((val) => {
-        const trimmed = val.replace(/,/g, '')
-        expect(trimmed).to.equal(`${miles} miles`)
+        const trimmed = val.replace(/,/g, '') //removed ',' from estimated mileage for accurate validation
+        expect(trimmed).to.equal(`${miles} miles`) //validates full estimated mileage string without comma
       })      
     QuickQuotePO.mileageFormBoxChange()
       .invoke('text')
@@ -82,7 +83,7 @@ class QuickQuotePage {
       .invoke('text')
       .should('equal', 'Yes, continue')
   }
-
+  //continues to next page
   clickContinueButton() {
     QuickQuotePO.mileageFormBoxContinue()
       .click()

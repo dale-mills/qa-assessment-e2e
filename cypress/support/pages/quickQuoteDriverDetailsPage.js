@@ -32,7 +32,7 @@ const DriverDetailsP0 = {
 class DriverDetailsPage {
 
   verifyQuickQuoteForm() {
-    //verify headers and back button
+    //verify quick quote headers and back button
     DriverDetailsP0.quickQuote()
       .within(() => {
         DriverDetailsP0.quickQuoteHeader()
@@ -49,7 +49,7 @@ class DriverDetailsPage {
               .children('img')
                 .should('exist')
           })
-        //verify driver details form fields
+        //verify driver details form fields and content
         DriverDetailsP0.driverDetailsForm()
           .within(() => {
             DriverDetailsP0.formQuestion()
@@ -123,7 +123,7 @@ class DriverDetailsPage {
                   .should('be.disabled')
               })
           })
-        //verify footer
+        //verify quick quote footer
         DriverDetailsP0.noticeForDOB()
           .invoke('text')
           .should('equal', 'Find out about how we process your data in our privacy notice.')
@@ -134,7 +134,7 @@ class DriverDetailsPage {
           })
       })
   }
-
+  //selects ncd length from dropdown then verifies correct value has been selected
   selectNcdValue(ncd) {
     DriverDetailsP0.ncdDropdown()
       .click()
@@ -145,9 +145,9 @@ class DriverDetailsPage {
       .invoke('text')
       .should('equal', ncd.toString())
   }
-
+  //enter dob into field then verifies correct value has been added  
   enterDOBValues(dob) {
-
+    //splits date string by '/' delimiter (expected format DD/MM/YYYY)
     const [dobDay, dobMonth, dobYear] = dob.split('/')
 
     DriverDetailsP0.dobFieldDay()
@@ -164,7 +164,7 @@ class DriverDetailsPage {
     DriverDetailsP0.dobFieldYear()
       .should('have.value', dobYear)
   }
-
+  //enter postcode into field then verifies correct value has been added  
   enterPostcodeValue(postcode) {
     DriverDetailsP0.postcodeInput()
       .type(postcode)
@@ -172,7 +172,7 @@ class DriverDetailsPage {
       .invoke('val')
       .should('equal', postcode)
   }
-
+  //selects renewal month from dropdown then verifies correct month has been selected  
   selectCarInsuranceRenewalValue(month) {
     DriverDetailsP0.renewalQuestionDropdown()
       .click()
@@ -184,7 +184,7 @@ class DriverDetailsPage {
       .invoke('text')
       .should('equal', month)
   }
-
+  //enter email address then verifies correct email has been added  
   enterEmailAddress() {
     //generate random email address
     const randomEmail = `qa-assessment-${Date.now()}@1secmail.com`
@@ -194,7 +194,7 @@ class DriverDetailsPage {
       .invoke('val')
       .should('equal', randomEmail)
   }
-
+  //passes not a robot checks, then verifies box changes to complete. 'dblClick' method chosen as Event Listener was on text box
   verifyUserIsNotARobot() {
     DriverDetailsP0.parkingContainer()
       .within(() => {
@@ -204,9 +204,9 @@ class DriverDetailsPage {
     DriverDetailsP0.parkingContainerCompleted()
       .should('be.visible')
   }
-
+  //submits quick quote form and waits until the subsequent api calls have finished
   submitQuickQuoteForm() {
-    cy.intercept('/api/v1/quick-quote')
+    cy.intercept('POST', '/api/v1/quick-quote')
       .as('submitQuickQuote')
     DriverDetailsP0.submitQuickQuoteBtn()
       .should('be.enabled')

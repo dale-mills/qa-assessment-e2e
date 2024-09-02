@@ -27,16 +27,21 @@ class ResultsDetailsPage {
         //retrieve vehicle and miles info
         const vehicleInfo = Cypress.env('vehicleInfo')
         const miles = Cypress.env('miles')
+        //validates full quote results page and returned values
         resultsDetailsPagePO.quickQuoteResults()
             .within(() => {
+                //validates results header contents within quote results container
                 resultsDetailsPagePO.resultsHeader()
                     .invoke('text')
                     .should('contains', `A quick quote for your ${vehicleInfo}`)
+                //validates text below header contents within quote results container
                 resultsDetailsPagePO.successfulQuoteText()
                     .invoke('text')
                     .should('equal', `Success! Here's a quick estimate of your price. We've made a few guesses, so it may go up or down after you complete the rest of your details.`)
+                //validates quote info card is within quote results container
                 resultsDetailsPagePO.quoteInfo()
                     .within(() => {
+                        //validates mileage section resides in quote info card and verifies contents
                         resultsDetailsPagePO.mileageSection()
                             .within(() => {
                                 resultsDetailsPagePO.mileageSectionTitle()
@@ -53,6 +58,7 @@ class ResultsDetailsPage {
                                             .should('equal', 'miles')
                                     })
                             })
+                        //validates estimated quote section resides in quote info card and verifies contents
                         resultsDetailsPagePO.estimatedQuoteSection()
                             .within(() => {
                                 resultsDetailsPagePO.estimatedQuoteSectionTitle()
@@ -61,17 +67,22 @@ class ResultsDetailsPage {
                                 resultsDetailsPagePO.estimatedQuoteSectionPrice()
                                     .invoke('text')
                                     .then((value) => {
+                                        //regex validation ensures £ sign followed by any numbers then only two numbers after decimal place
                                         expect(value).to.match(/^£\d+\.\d{2}$/)
                                     })
                             })
                         //skipped as modal not opening properly consistently
                         // resultsDetailsPagePO.estimatedQuoteSectionIcon()
                         //     .click()
+
+                        //validates estimated quote section caption resides in quote info card and verifies pence per mile text
                         resultsDetailsPagePO.estimatedQuoteSectionCaption()
                             .invoke('text')
                             .then((value) => {
+                                //regex validation ensures the following format: 'Based on {int}.{int} pence/mile'
                                 expect(value).to.match(/^Based on \d+(\.\d+)? pence\/mile/)  
                             })
+                        //validates complete quote section resides in quote info card and verifies contents/buttons/urls
                         resultsDetailsPagePO.completeQuoteWrapper()
                             .within(() => {
                                 resultsDetailsPagePO.completeQuoteHeader()
@@ -111,6 +122,7 @@ class ResultsDetailsPage {
                                     })
                             })
                     })
+                //verifies assumptions/disclaimer text at footer of page
                 resultsDetailsPagePO.assumptionsText()
                     .eq(0)
                     .invoke('text')
