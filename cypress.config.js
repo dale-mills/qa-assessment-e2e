@@ -13,7 +13,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config)
     },
-    baseUrl: 'https://quote.test.bymiles.co.uk',
+    baseUrl: 'https://bymiles.co.uk',
     specPattern: 'cypress/integration/e2e-tests/**/*.feature',
   },
 })
